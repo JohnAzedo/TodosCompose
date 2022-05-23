@@ -26,13 +26,12 @@ class TodosListViewModel : ViewModel() {
     }
 
     fun updateState(index: Int, selected: Boolean) {
-        val oldValue = _todos.value?.toMutableList()
-        val oldItem = oldValue?.get(index)?.copy()
-        oldItem?.done = selected
-        oldItem?.let {
-            oldValue.removeAt(index)
-            oldValue.add(index, oldItem)
+        val list = _todos.value?.toMutableList()
+        val item = list?.get(index)?.copy(done = selected)
+        item?.let {
+            list.removeAt(index)
+            list.add(index, item)
         }
-        _todos.postValue(oldValue)
+        _todos.postValue(list)
     }
 }
