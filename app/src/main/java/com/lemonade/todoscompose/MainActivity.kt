@@ -42,20 +42,21 @@ class MainActivity : ComponentActivity() {
     @Preview
     @Composable
     fun TodosListPage() {
-        val todos by viewModel.todos.observeAsState()
-
         Scaffold(
             topBar = { Toolbar(title = "Just do it!") }
-        ) {
+        ) { TodosList() }
+    }
 
-            todos?.let {
-                LazyColumn {
-                    items(it.size) { index ->
-                        TodoRow(index, it[index])
-                    }
+    @Composable
+    fun TodosList(){
+        val todos = viewModel.todos.observeAsState()
+
+        todos.value?.let {
+            LazyColumn {
+                items(it.size) { index ->
+                    TodoRow(index, it[index])
                 }
             }
-
         }
     }
 
@@ -66,7 +67,7 @@ class MainActivity : ComponentActivity() {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Log.d("TODO_VALUE", "UI -> ${todo.id} - ${todo.done}")
-            Checkbox(checked = todo.done, onCheckedChange = { viewModel.updateState(index) })
+            Checkbox(checked = todo.done, onCheckedChange = { viewModel.updateState(index, it) })
             Text(
                 text = todo.text,
                 fontSize = 20.sp,
