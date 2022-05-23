@@ -8,10 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Checkbox
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -31,8 +28,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(TodosListViewModel::class.java)
-        viewModel.loadTodos()
+        viewModel = ViewModelProvider(this)[TodosListViewModel::class.java]
 
         setContent {
             TodosListPage()
@@ -44,7 +40,12 @@ class MainActivity : ComponentActivity() {
     fun TodosListPage() {
         Scaffold(
             topBar = { Toolbar(title = "Just do it!") }
-        ) { TodosList() }
+        ) { 
+            TodosList() 
+            Button(onClick = { viewModel.createTodo() }) {
+                Text("Create")
+            }
+        }
     }
 
     @Composable
@@ -58,6 +59,7 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+        
     }
 
     @Composable
