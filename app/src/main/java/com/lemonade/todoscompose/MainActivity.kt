@@ -4,10 +4,10 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -20,16 +20,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.ViewModelProvider
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    private lateinit var viewModel: TodosListViewModel
+    private val viewModel: TodosListViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(this)[TodosListViewModel::class.java]
-
+        viewModel.getTodos()
         setContent {
             TodosListPage()
         }
@@ -38,21 +38,23 @@ class MainActivity : ComponentActivity() {
     @Preview
     @Composable
     fun TodosListPage() {
+        val todos: List<Todo> by viewModel.todos.observeAsState(listOf())
+
         Scaffold(
             topBar = { Toolbar(title = "Just do it!") }
         ) { 
-            TodosList() 
-            Button(onClick = { viewModel.createTodo() }) {
+            TodosList(todos)
+            Button(onClick = { viewModel.getTodos() }) {
                 Text("Create")
             }
         }
     }
 
     @Composable
-    fun TodosList(){
-        val todos = viewModel.todos.observeAsState()
+    fun TodosList(todos: List<Todo>){
+        Log.d("CALL", todos.toString())
 
-        todos.value?.let {
+        todos.let {
             LazyColumn {
                 items(it.size) { index ->
                     TodoRow(index, it[index])

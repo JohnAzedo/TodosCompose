@@ -1,38 +1,31 @@
 package com.lemonade.todoscompose
 
+import android.util.Log
 import androidx.lifecycle.*
+import androidx.lifecycle.viewmodel.compose.viewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@HiltViewModel
 class TodosListViewModel @Inject constructor(
     private val repository: TodoRepository
 ) : ViewModel() {
 
-//    private val _todos = MutableLiveData<List<Todo>>(mutableListOf())
-//    val todos: LiveData<List<Todo>> get() = _todos
+//    val todos : LiveData<List<Todo>> = repository.fetchAll().asLiveData()
 
-    val todos : LiveData<List<Todo>> = repository.fetchAll().asLiveData()
+    private val _todos = MutableLiveData<List<Todo>>(listOf())
+    val todos: LiveData<List<Todo>> = _todos
 
-//    fun loadTodos(): Flow<List<Todo>> {
-////        viewModelScope.launch(Dispatchers.IO) {
-////            _todos.postValue(
-////                mutableListOf(
-////                    Todo(1, "Fix bed", false),
-////                    Todo(2, "Start project", false),
-////                    Todo(3, "Go to the supermarket", false)
-////                )
-////            )
-////        }
-//
-//        return
-//    }
+    fun getTodos(){
+        viewModelScope.launch {
+            Log.d("CALL", "This")
+            _todos.postValue(repository.fetchAll())
+        }
+    }
 
     fun updateState(index: Int, selected: Boolean) {
-//        val list = _todos.value?.toMutableList()
-//        val item = list?.get(index)?.copy(done = selected)
-//        item?.let { list.set(index, item) }
-//        _todos.postValue(list)
         viewModelScope.launch(Dispatchers.IO) {
             repository.check(index, selected)
         }

@@ -1,14 +1,12 @@
 package com.lemonade.todoscompose
+import javax.inject.Inject
 
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-
-class TodoRepositoryImpl: TodoRepository{
+class TodoRepositoryImpl @Inject constructor(): TodoRepository{
     private var counterID: Int = 1
     private val todos: MutableList<Todo> = mutableListOf()
 
-    override fun fetchAll(): Flow<List<Todo>> {
-        return flow { todos }
+    override fun fetchAll(): List<Todo> {
+        return todos
     }
 
     override suspend fun create(todo: Todo) {
