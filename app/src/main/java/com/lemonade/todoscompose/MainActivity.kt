@@ -9,9 +9,14 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -21,15 +26,15 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    private val viewModel: TodosListViewModel by viewModels()
+    private val viewModel: TodosViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel.getTodos()
         setContent {
             TodosListPage()
         }
@@ -38,21 +43,22 @@ class MainActivity : ComponentActivity() {
     @Preview
     @Composable
     fun TodosListPage() {
-        val todos: List<Todo> by viewModel.todos.observeAsState(listOf())
+        val todos = viewModel.todos
 
         Scaffold(
-            topBar = { Toolbar(title = "Just do it!") }
-        ) { 
-            TodosList(todos)
-            Button(onClick = { viewModel.getTodos() }) {
-                Text("Create")
+            topBar = { Toolbar(title = "Just do it!") },
+            floatingActionButton = {
+                FloatingActionButton(onClick = { viewModel.createTodo() }) {
+                    Icon(Icons.Filled.Add, "")
+                }
             }
+        ) {
+            TodosList(todos)
         }
     }
 
     @Composable
-    fun TodosList(todos: List<Todo>){
-        Log.d("CALL", todos.toString())
+    fun TodosList(todos: List<Todo>) {
 
         todos.let {
             LazyColumn {
@@ -61,7 +67,7 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-        
+
     }
 
     @Composable
@@ -70,7 +76,6 @@ class MainActivity : ComponentActivity() {
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Log.d("TODO_VALUE", "UI -> ${todo.id} - ${todo.done}")
             Checkbox(checked = todo.done, onCheckedChange = { viewModel.updateState(index, it) })
             Text(
                 text = todo.text,
