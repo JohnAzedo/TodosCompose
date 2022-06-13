@@ -1,4 +1,4 @@
-package com.lemonade.todoscompose
+package com.lemonade.todoscompose.domain
 
 import kotlinx.coroutines.flow.Flow
 

@@ -1,6 +1,7 @@
-package com.lemonade.todoscompose
+package com.lemonade.todoscompose.ui
 
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
+import com.lemonade.todoscompose.domain.Todo
 
 object Previews {
     class ToolbarTitleProvider : PreviewParameterProvider<String> {

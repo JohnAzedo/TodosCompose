@@ -1,10 +1,9 @@
-package com.lemonade.todoscompose
+package com.lemonade.todoscompose.ui
 
-import android.util.Log
-import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import com.lemonade.todoscompose.domain.Todo
+import com.lemonade.todoscompose.domain.TodoRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -16,6 +15,7 @@ class TodosViewModel @Inject constructor(
 ) : ViewModel() {
 
     val todos = repository.fetchAll()
+
 
     fun updateState(index: Int, selected: Boolean) = launch {
         repository.check(index, selected)
