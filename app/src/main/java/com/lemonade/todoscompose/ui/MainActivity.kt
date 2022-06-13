@@ -1,4 +1,4 @@
-package com.lemonade.todoscompose
+package com.lemonade.todoscompose.ui
 
 import android.os.Bundle
 import android.util.Log
@@ -11,12 +11,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -25,8 +20,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.lemonade.todoscompose.domain.Todo
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -43,7 +38,7 @@ class MainActivity : ComponentActivity() {
     @Preview
     @Composable
     fun TodosListPage() {
-        val todos = viewModel.todos
+        Log.d("TODO_FLOW", "Page refresh!")
 
         Scaffold(
             topBar = { Toolbar(title = "Just do it!") },
@@ -53,15 +48,17 @@ class MainActivity : ComponentActivity() {
                 }
             }
         ) {
-            TodosList(todos)
+            TodosList()
         }
     }
 
     @Composable
-    fun TodosList(todos: List<Todo>) {
+    fun TodosList() {
+        val todos by viewModel.todos.collectAsState(initial = listOf())
 
         todos.let {
             LazyColumn {
+                Log.d("TODO_FLOW", "TodoList refresh!")
                 items(it.size) { index ->
                     TodoRow(index, it[index])
                 }
@@ -72,6 +69,7 @@ class MainActivity : ComponentActivity() {
 
     @Composable
     fun TodoRow(index: Int, todo: Todo) {
+
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
