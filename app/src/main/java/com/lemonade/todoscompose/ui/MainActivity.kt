@@ -20,8 +20,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.lifecycleScope
 import com.lemonade.todoscompose.domain.Todo
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -54,7 +56,7 @@ class MainActivity : ComponentActivity() {
 
     @Composable
     fun TodosList() {
-        val todos by viewModel.todos.collectAsState(initial = listOf())
+        val todos = viewModel.todos
 
         todos.let {
             LazyColumn {
