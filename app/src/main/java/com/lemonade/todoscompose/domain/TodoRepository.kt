@@ -1,9 +1,10 @@
 package com.lemonade.todoscompose.domain
 
-import kotlinx.coroutines.flow.Flow
+
+import kotlinx.coroutines.flow.SharedFlow
 
 interface TodoRepository {
-    fun fetchAll(): Flow<List<Todo>>
+    fun getFlow(): SharedFlow<List<Todo>>
     suspend fun create(todo: Todo)
     suspend fun check(index: Int, selected: Boolean)
 }
