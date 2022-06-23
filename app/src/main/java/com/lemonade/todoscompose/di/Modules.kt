@@ -1,20 +1,15 @@
 package com.lemonade.todoscompose.di
 
-import com.lemonade.todoscompose.infra.TodoRepositoryInMemoryImpl
 import com.lemonade.todoscompose.domain.TodoRepository
-import dagger.Binds
-import dagger.Module
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
-import javax.inject.Singleton
+import com.lemonade.todoscompose.infra.TodoRepositoryInMemoryImpl
+import com.lemonade.todoscompose.ui.TodosViewModel
+import org.koin.androidx.viewmodel.dsl.viewModelOf
+import org.koin.core.module.dsl.bind
+import org.koin.core.module.dsl.factoryOf
+import org.koin.dsl.module
 
-@Module
-@InstallIn(SingletonComponent::class)
-abstract class Modules {
-
-    @Singleton
-    @Binds
-    abstract fun bindTodoRepository(
-        repository: TodoRepositoryInMemoryImpl
-    ): TodoRepository
+val koinModule = module {
+    // TodosViewModel
+    factoryOf(::TodoRepositoryInMemoryImpl) { bind<TodoRepository>() }
+    viewModelOf(::TodosViewModel)
 }

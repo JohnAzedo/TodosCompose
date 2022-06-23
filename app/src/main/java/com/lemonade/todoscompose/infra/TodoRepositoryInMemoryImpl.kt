@@ -3,9 +3,8 @@ package com.lemonade.todoscompose.infra
 import com.lemonade.todoscompose.domain.Todo
 import com.lemonade.todoscompose.domain.TodoRepository
 import kotlinx.coroutines.flow.*
-import javax.inject.Inject
 
-class TodoRepositoryInMemoryImpl @Inject constructor(): TodoRepository {
+class TodoRepositoryInMemoryImpl: TodoRepository {
     private var counterID: Int = 1
     private var todos = mutableListOf<Todo>()
     private val _todosFlow = MutableSharedFlow<List<Todo>>(0)
