@@ -1,7 +1,7 @@
 package com.lemonade.todoscompose.di
 
 import com.lemonade.todoscompose.domain.TodoRepository
-import com.lemonade.todoscompose.infra.TodoRepositoryInMemoryImpl
+import com.lemonade.todoscompose.infra.fake.TodoRepositoryInMemoryImpl
 import com.lemonade.todoscompose.ui.TodosViewModel
 import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.core.module.dsl.bind

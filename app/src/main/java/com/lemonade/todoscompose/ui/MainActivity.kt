@@ -36,8 +36,6 @@ class MainActivity : ComponentActivity() {
     @Preview
     @Composable
     fun TodosListPage() {
-        Log.d("TODO_FLOW", "Page refresh!")
-
         Scaffold(
             topBar = { Toolbar(title = "Just do it!") },
             floatingActionButton = {
@@ -56,7 +54,6 @@ class MainActivity : ComponentActivity() {
 
         todos.let {
             LazyColumn {
-                Log.d("TODO_FLOW", "TodoList refresh!")
                 items(it.size) { index ->
                     TodoRow(index, it[index])
                 }
@@ -67,7 +64,6 @@ class MainActivity : ComponentActivity() {
 
     @Composable
     fun TodoRow(index: Int, todo: Todo) {
-
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
