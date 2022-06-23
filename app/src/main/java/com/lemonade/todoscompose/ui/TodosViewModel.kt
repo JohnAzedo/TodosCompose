@@ -1,19 +1,15 @@
 package com.lemonade.todoscompose.ui
 
-import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.lemonade.todoscompose.domain.Todo
 import com.lemonade.todoscompose.domain.TodoRepository
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class TodosViewModel @Inject constructor(
+class TodosViewModel(
     private val repository: TodoRepository
 ) : ViewModel() {
 

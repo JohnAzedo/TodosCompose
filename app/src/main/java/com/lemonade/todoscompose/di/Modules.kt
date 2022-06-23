@@ -9,6 +9,7 @@ import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
 
 val koinModule = module {
+    // TodosViewModel
     factoryOf(::TodoRepositoryInMemoryImpl) { bind<TodoRepository>() }
     viewModelOf(::TodosViewModel)
 }
