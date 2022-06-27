@@ -15,6 +15,5 @@ class MyApplication: Application(){
             androidContext(this@MyApplication)
             modules(koinModule)
         }
-        AppDatabase.setupDatabase(applicationContext)
     }
 }
