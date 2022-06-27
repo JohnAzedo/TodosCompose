@@ -3,17 +3,25 @@ package com.lemonade.todoscompose.infra.room
 import com.lemonade.todoscompose.domain.Todo
 import com.lemonade.todoscompose.domain.TodoRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
-class TodoRepositoryImpl: TodoRepository {
+class TodoRepositoryImpl(
+    private val dataSource: RoomDataSource
+): TodoRepository {
     override fun getFlow(): Flow<List<Todo>> {
-        TODO("Not yet implemented")
+        return dataSource.getAll().map { list ->
+            list.map {
+                TodoMapper.fromRoom(it)
+            }
+        }
     }
 
     override suspend fun create(todo: Todo) {
-        TODO("Not yet implemented")
+        val entity = TodoMapper.toRoom(todo)
+        dataSource.createTodo(entity)
     }
 
     override suspend fun check(index: Int, selected: Boolean) {
-        TODO("Not yet implemented")
+        dataSource.checkTodo(index, selected)
     }
 }
