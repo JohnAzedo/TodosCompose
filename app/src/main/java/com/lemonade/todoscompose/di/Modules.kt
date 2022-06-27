@@ -5,6 +5,7 @@ import com.lemonade.todoscompose.domain.TodoRepository
 import com.lemonade.todoscompose.infra.room.AppDatabase
 import com.lemonade.todoscompose.ui.TodosViewModel
 import com.lemonade.todoscompose.infra.room.TodoRepositoryImpl
+import kotlinx.coroutines.Dispatchers
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.core.module.dsl.bind
@@ -23,6 +24,10 @@ val koinModule = module {
     single {
         val database = get<AppDatabase>()
         database.dataSource()
+    }
+
+    single {
+        Dispatchers.IO
     }
 
     factoryOf(::TodoRepositoryImpl) { bind<TodoRepository>()}

@@ -1,26 +1,31 @@
 package com.lemonade.todoscompose.ui
 
-import androidx.compose.runtime.mutableStateListOf
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.lemonade.todoscompose.domain.Todo
 import com.lemonade.todoscompose.domain.TodoRepository
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class TodosViewModel(
-    private val repository: TodoRepository
+    private val repository: TodoRepository,
+    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : ViewModel() {
 
-    val todos = mutableStateListOf<Todo>()
+    private val _todos = MutableLiveData<List<Todo>>()
+    val todos: LiveData<List<Todo>> = _todos
 
     init {
         launch {
-            repository.getFlow().collect {
-                todos.clear()
-                todos.addAll(it)
-            }
+            repository.getFlow()
+                .catch { /* Do something */ }
+                .collect {
+                    _todos.postValue(it)
+                }
         }
     }
 
@@ -34,7 +39,7 @@ class TodosViewModel(
     }
 
     private fun launch(callback: suspend () -> Unit) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(dispatcher) {
             callback()
         }
     }

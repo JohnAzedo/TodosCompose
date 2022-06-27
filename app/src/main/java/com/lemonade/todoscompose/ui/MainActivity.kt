@@ -11,6 +11,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -50,12 +51,12 @@ class MainActivity : ComponentActivity() {
 
     @Composable
     fun TodosList() {
-        val todos = viewModel.todos
+        val todos by viewModel.todos.observeAsState(initial = listOf())
 
         todos.let {
             LazyColumn {
                 items(it.size) { index ->
-                    TodoRow(index, it[index])
+                    TodoRow(it[index])
                 }
             }
         }
@@ -63,12 +64,16 @@ class MainActivity : ComponentActivity() {
     }
 
     @Composable
-    fun TodoRow(index: Int, todo: Todo) {
+    fun TodoRow(todo: Todo) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Checkbox(checked = todo.done, onCheckedChange = { viewModel.updateState(index, it) })
+            Checkbox(checked = todo.done, onCheckedChange = {
+                todo.id?.let { id ->
+                    viewModel.updateState(id, it)
+                }
+            })
             Text(
                 text = todo.text,
                 fontSize = 20.sp,
