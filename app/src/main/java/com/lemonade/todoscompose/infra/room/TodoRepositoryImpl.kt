@@ -10,9 +10,7 @@ class TodoRepositoryImpl(
 ): TodoRepository {
     override fun getFlow(): Flow<List<Todo>> {
         return dataSource.getAll().map { list ->
-            list.map {
-                TodoMapper.fromRoom(it)
-            }
+            list.map { TodoMapper.fromRoom(it) }
         }
     }
 
